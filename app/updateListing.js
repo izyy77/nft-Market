@@ -1,18 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useWeb3Contract, useMoralis } from "react-moralis";
+import {useMoralis } from "@moralisweb3/react";
 import nftAbi from "../key/nft.json";
 import Image from "next/image";
 import { ethers } from "ethers";
 import updateListingModal from "./02_updateListingModal";
-import { Card } from "web3uikit";
-export default function UpdateListing({
-  marketplaceAddress,
-  nftAddress,
-  price,
-  seller,
-  tokenId,
-}) {
+import { Box, Text } from "@chakra-ui/react";
+export default function UpdateListing({ marketplaceAddress, nftAddress, price, seller, tokenId }) {
   const { account } = useMoralis();
   const [imageUri, setImageUri] = useState("");
   const [accounts, setAccount] = useState("");
@@ -36,16 +30,10 @@ export default function UpdateListing({
           console.log("🎯 Token URI:", tokenURI);
 
           if (tokenURI) {
-            const metadataURL = tokenURI.replace(
-              "ipfs://",
-              "https://ipfs.io/ipfs/"
-            );
+            const metadataURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
             const response = await fetch(metadataURL);
             const metadata = await response.json();
-            const image = metadata.image.replace(
-              "ipfs://",
-              "https://ipfs.io/ipfs/"
-            );
+            const image = metadata.image.replace("ipfs://", "https://ipfs.io/ipfs/");
             setTokenName(response.name);
             setTokenDescription(response.description);
             console.log("🖼️ Final Image URL:", image);
@@ -84,25 +72,16 @@ export default function UpdateListing({
             marketPlaceAddress={marketplaceAddress}
             onClose={hideModal}
           ></updateListingModal>
-          <Card
-            onClick={handleCardClick}
-            title={tokenName}
-            description={tokenDescription}
-          >
-            <div> #{tokenId}</div>
-            <div className=" italic text-sm">
-              marketplaceAddress:{marketplaceAddress}
-            </div>
-            <div> Nft-Address:{nftAddress}</div>
-            <Image
-              loader={() => imageUri}
-              src={imageUri}
-              height={185}
-              width={185}
-            ></Image>
+          <Box onClick={handleCardClick}>
+            <Text fontSize={"xl"}> {tokenName}</Text>
+            <Text fontSize={"xl"}> {tokenDescription}</Text>
+            <div>#{tokenId} </div>
+            <div className="italic text-sm">MarketPlaceAddress:{marketplaceAddress}</div>
+            <div> Nft Address:{nftAddress}</div>
+            <Image loader={() => imageUri} src={imageUri} height={185} width={185}></Image>
             <div className="italic text-sm"> Owned By{ReOwnedBy}</div>
             <div className="italic text-sm"> Price:{price}</div>
-          </Card>
+          </Box>
         </div>
       ) : (
         <div> Loading ...</div>

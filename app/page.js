@@ -1,9 +1,9 @@
-"use client";
-import { MoralisProvider } from "react-moralis"
+'use client'
+import { MoralisProvider } from "@moralisweb3/react";
 import Head from "next/head";
 import Homeez from "./nft";
 import { NotificationProvider } from "web3uikit";
-import WalletConnect from ".././connectButton"
+import WalletConnect from "../connectButton"
 export default function Home() {
   return (
     <div>
@@ -13,6 +13,7 @@ export default function Home() {
       <MoralisProvider initializeOnMount={false}>
         <Homeez/>
         <WalletConnect/>
+        <NotificationProvider/>
       </MoralisProvider>
       hi from Next.js & it's Now ok again ok
     </div>

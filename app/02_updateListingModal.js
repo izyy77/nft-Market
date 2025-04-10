@@ -1,6 +1,18 @@
+"use client";
 import { ethers } from "ethers";
 import { useState } from "react";
-import { Modal, Input, useNotification } from "web3uikit";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalCloseButton,
+  Input,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
 import nftMarketAbi from "../key/NFTMarketPlace.json";
 
 export default async function updateListingModal({
@@ -39,7 +51,7 @@ export default async function updateListingModal({
       tittle: "Listing updated -please refreash (and move block )",
       position: "topR",
     });
-    setPriceToUpdateListing("0")
+    setPriceToUpdateListing("0");
   };
 
   return (
@@ -56,14 +68,23 @@ export default async function updateListingModal({
         })
       }
     >
-      <Input
-        label="update Listing"
-        type="number"
-        name="NFT MarketPlace"
-        onChange={(event) => {
-          setPriceToUpdateListing(event.target.value);
-        }}
-      ></Input>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Update Listing </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Input
+            label="update Listing"
+            type="number"
+            name="NFT MarketPlace"
+            onChange={(event) => {
+              setPriceToUpdateListing(event.target.value);
+            }}
+          ></Input>
+        </ModalBody>
+        <Button onClick={handleUpdateListingSuccess}> Update Listing </Button>
+        <ModalFooter />
+      </ModalContent>
     </Modal>
   );
 }
