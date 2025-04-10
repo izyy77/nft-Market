@@ -3,15 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.2.3"
+    "@moralisweb3/react": "^2.27.2",
+    "@moralisweb3/streams": "^2.27.2",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
+    "git": "^0.1.5",
+    "mongodb": "^6.15.0",
+    "moralis": "^2.27.2",
+    "moralis-v1": "^1.13.0",
+    "next": "15.2.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "type": "module",
+    "web3": "^4.16.0",
+    "web3uikit": "1.0.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
