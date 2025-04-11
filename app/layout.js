@@ -1,8 +1,11 @@
+import { Provider } from "../components/ui/provider";
+
 export default function RootLayout({ children }) {
-    return (
-      <html lang="en">
-        <body>{children}</body>
-      </html>
-    );
-  }
-  
+  return (
+    <html suppressContentEditableWarning>
+      <body>
+        <Provider>{children}</Provider>
+      </body>
+    </html>
+  );
+}

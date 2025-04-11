@@ -1,8 +1,8 @@
 import { MoralisProvider } from "@moralisweb3/react"
-function myApp({component, pageProps}){
+function myApp({Component, pageProps}){
     return (
         <MoralisProvider initializeOnMount={false}> 
-        <component {...pageProps}/>
+        <Component {...pageProps}/>
         </MoralisProvider>
     )
 }

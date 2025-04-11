@@ -4,15 +4,15 @@ import {useMoralis } from "@moralisweb3/react";
 import nftAbi from "../key/nft.json";
 import Image from "next/image";
 import { ethers } from "ethers";
-import updateListingModal from "./02_updateListingModal";
+import UpdateListingModal from "./02_updateListingModal";
 import { Box, Text } from "@chakra-ui/react";
 export default function UpdateListing({ marketplaceAddress, nftAddress, price, seller, tokenId }) {
   const { account } = useMoralis();
   const [imageUri, setImageUri] = useState("");
   const [accounts, setAccount] = useState("");
-  const { tokenName, setTokenName } = useState("");
-  const { tokenDescription, setTokenDescription } = useState("");
-  const { showModal, setShowModal } = useState(false);
+  const  [tokenName, setTokenName] = useState("");
+  const [tokenDescription, setTokenDescription ] = useState("");
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     const fetchImage = async () => {
       try {
@@ -65,13 +65,13 @@ export default function UpdateListing({ marketplaceAddress, nftAddress, price, s
     <div>
       {imageUri ? (
         <div>
-          <updateListingModal
+          <UpdateListingModal
             isVisible={showModal}
             tokenId={tokenId}
             nftAddress={nftAddress}
             marketPlaceAddress={marketplaceAddress}
             onClose={hideModal}
-          ></updateListingModal>
+          ></UpdateListingModal>
           <Box onClick={handleCardClick}>
             <Text fontSize={"xl"}> {tokenName}</Text>
             <Text fontSize={"xl"}> {tokenDescription}</Text>

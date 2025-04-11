@@ -7,84 +7,81 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   ModalCloseButton,
   Input,
   Button,
   useToast,
 } from "@chakra-ui/react";
 import nftMarketAbi from "../key/NFTMarketPlace.json";
-
-export default async function updateListingModal({
+export default function UpdateListingModal({
   nftAddress,
   tokenId,
   marketplaceAddress,
   isVisible,
   onClose,
 }) {
-  if (typeof window.ethereum !== "undefined") {
-    const { accounts, setAccounts } = useState("");
-    const { priceToUpdateListing, setPriceToUpdateListing } = useState(0);
-    const provider = await ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const accountAddress = await signer.getAddress();
-    setAccounts(accountAddress);
+  const [accounts, setAccounts] = useState("");
+  const [priceToUpdateListing, setPriceToUpdateListing] = useState(0);
+  const toast = useToast();
+  const handleSuccess = async () => {
+    try {
+      if (typeof window.ethereum !== "undefined") {
+        const provider = await ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const accountAddress = await signer.getAddress();
+        setAccounts(accountAddress);
+     
+        const nfMarketPlace = await ethers.Contract(marketplaceAddress, nftMarketAbi, signer);
+        const tx = await nfMarketPlace.updateListing(
+          nftAddress,
+          tokenId,
+          (newPrice = priceToUpdateListing),
+        );
+        await tx.wait(1);
 
-    const nfMarketPlace = await ethers.Contract(
-      marketplaceAddress,
-      nftMarketAbi,
-      provider
-    );
-    const updateListings = await nfMarketPlace.updateListing(
-      nftAddress,
-      tokenId,
-      (newPrice = priceToUpdateListing)
-    );
-  }
+        toast({
+          title: "Listing updated.",
+          description: "Your listing price was updated successfully.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
 
-  const dispatch = useNotification;
-  const handleUpdateListingSuccess = async (tx) => {
-    await tx.wait(1);
-    dispatch({
-      type: "Success",
-      message: "Listing Updated",
-      tittle: "Listing updated -please refreash (and move block )",
-      position: "topR",
-    });
-    setPriceToUpdateListing("0");
-  };
-
-  return (
-    <Modal
-      isVisible={isVisible}
-      onCancel={onClose}
-      onCloseButtonPressed={onClose}
-      onOk={() =>
-        updateListings({
-          onError: (error) => {
-            console.log(error);
-          },
-          onSuccess: handleUpdateListingSuccess,
-        })
+        setPriceToUpdateListing("");
+        onClose();
       }
-    >
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Update Listing </ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Input
-            label="update Listing"
+    } 
+     catch (error) {
+      console.error("❌ Update listing failed:", error);
+      toast({
+        title: "Error updating listing",
+        description: error.message || "Something went wrong",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+     }
+  }
+    return (
+      <Modal isOpen={isVisible} onClose={onclose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Update Listing </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input 
+            placeHolder={"New Price inERG"}
             type="number"
-            name="NFT MarketPlace"
+            value={priceToUpdateListing}
             onChange={(event) => {
               setPriceToUpdateListing(event.target.value);
             }}
-          ></Input>
-        </ModalBody>
-        <Button onClick={handleUpdateListingSuccess}> Update Listing </Button>
-        <ModalFooter />
-      </ModalContent>
-    </Modal>
-  );
-}
+            />
+          </ModalBody>
+          <Button colorScheme="blue" onClick={handleSuccess} > Update Listing </Button>
+        </ModalContent>
+      </Modal>
+    );
+  };

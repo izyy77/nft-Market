@@ -7,6 +7,7 @@ export default function Homeez() {
     const FetchActive = async () => {
       try {
         const res = await fetch("/api/getActiveItems");
+        if(!res.ok)  throw new Error("Failed to Fetch ActiveItems")
         const data = await res.json();
         console.log("Received data:", data);
         setItems(data);
