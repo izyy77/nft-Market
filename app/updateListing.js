@@ -54,7 +54,6 @@ export default function UpdateListing({ marketplaceAddress, nftAddress, price, s
 
     fetchImage();
   }, []);
-
   const buyItem = async () => {
     try {
       if (typeof window.ethereum !== "undefined") {
@@ -62,11 +61,9 @@ export default function UpdateListing({ marketplaceAddress, nftAddress, price, s
         const signer = await provider.getSigner();
         const accountAddress = await signer.getAddress();
         setAccount(accountAddress);
-
         const NftMarket = new ethers.Contract(marketplaceAddress, NftMarketAbi, signer);
-        const buyNft = await NftMarket.buyItem(nftAddress, tokenId, {
-          value: price.toString(),
-        });
+        const valueInWei = BigInt(price);
+        const buyNft = await NftMarket.buyItem(nftAddress, tokenId, { value: valueInWei, gasLimit: 300000 });
         await buyNft.wait();
       }
     } catch (error) {
@@ -104,7 +101,7 @@ export default function UpdateListing({ marketplaceAddress, nftAddress, price, s
             boxShadow="md"
             transition="all 0.3s"
             _hover={{ boxShadow: "lg", transform: "scale(1.02)", cursor: "pointer" }}
-            onClick={handleCardClick}
+            // onClick={handleCardClick}
           >
             <CardBody>
               <Stack spacing="1">
@@ -119,12 +116,12 @@ export default function UpdateListing({ marketplaceAddress, nftAddress, price, s
                   NFT Address: {nftAddress.slice(0, 6)}...{nftAddress.slice(-4)}
                 </Text>
                 <Text className="italis tex-sm" fontSize={"xs"}>
-                  NFT Address:{" "}
+                  NFT Address:
                   <Link
                     href={`https://sepolia.etherscan.io/address/${nftAddress}`}
+                    isExternal
                     color="blue.400"
                     fontWeight="bold"
-                    isExternal
                   ></Link>
                 </Text>
                 <ChakraImage
