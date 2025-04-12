@@ -13,6 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import nftMarketAbi from "../key/NFTMarketPlace.json";
+
 export default function UpdateListingModal({
   nftAddress,
   tokenId,
@@ -20,22 +21,20 @@ export default function UpdateListingModal({
   isVisible,
   onClose,
 }) {
-  const [accounts, setAccounts] = useState("");
-  const [priceToUpdateListing, setPriceToUpdateListing] = useState(0);
+  const [priceToUpdateListing, setPriceToUpdateListing] = useState("");
   const toast = useToast();
+
   const handleSuccess = async () => {
     try {
       if (typeof window.ethereum !== "undefined") {
-        const provider = await ethers.BrowserProvider(window.ethereum);
+        const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
-        const accountAddress = await signer.getAddress();
-        setAccounts(accountAddress);
-     
-        const nfMarketPlace = await ethers.Contract(marketplaceAddress, nftMarketAbi, signer);
+
+        const nfMarketPlace = new ethers.Contract(marketplaceAddress, nftMarketAbi, signer);
         const tx = await nfMarketPlace.updateListing(
           nftAddress,
           tokenId,
-          (newPrice = priceToUpdateListing),
+          ethers.parseEther(priceToUpdateListing)
         );
         await tx.wait(1);
 
@@ -51,8 +50,7 @@ export default function UpdateListingModal({
         setPriceToUpdateListing("");
         onClose();
       }
-    } 
-     catch (error) {
+    } catch (error) {
       console.error("❌ Update listing failed:", error);
       toast({
         title: "Error updating listing",
@@ -62,26 +60,28 @@ export default function UpdateListingModal({
         isClosable: true,
         position: "top-right",
       });
-     }
-  }
-    return (
-      <Modal isOpen={isVisible} onClose={onclose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Update Listing </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Input 
-            placeHolder={"New Price inERG"}
+    }
+  };
+
+  return (
+    <Modal isOpen={isVisible} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Update Listing</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Input
+            placeholder="New Price in ETH"
             type="number"
             value={priceToUpdateListing}
-            onChange={(event) => {
-              setPriceToUpdateListing(event.target.value);
-            }}
-            />
-          </ModalBody>
-          <Button colorScheme="blue" onClick={handleSuccess} > Update Listing </Button>
-        </ModalContent>
-      </Modal>
-    );
-  };
+            onChange={(e) => setPriceToUpdateListing(e.target.value)}
+            mb={4}
+          />
+          <Button colorScheme="blue" width="100%" onClick={handleSuccess}>
+            Update Listing
+          </Button>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+}

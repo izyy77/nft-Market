@@ -1,10 +1,14 @@
-import { Provider } from "../components/ui/provider";
+"use client"
+import { ChakraClientProvider } from "./chakraProvider";
+import { Providers } from "../components/ui/provider"; // your Moralis or app-wide providers
 
 export default function RootLayout({ children }) {
   return (
-    <html suppressContentEditableWarning>
+    <html lang="en">
       <body>
-        <Provider>{children}</Provider>
+        <ChakraClientProvider>
+          <Providers>{children}</Providers>
+        </ChakraClientProvider>
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 "use client"
+import { color } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { useState } from "react";
 

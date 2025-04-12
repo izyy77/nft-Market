@@ -7,7 +7,6 @@ export default function Home() {
         <div className="p-4">
           <Homeez />
           <WalletConnect />
-          <p>hi from Next.js & it's Now ok again ok</p>
         </div>
   );
 }

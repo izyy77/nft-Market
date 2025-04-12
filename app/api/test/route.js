@@ -45,7 +45,6 @@ export async function POST(req) {
     const price = parseInt(logs[0].data, 16);
     const address = logs[0].address;
 
-    console.log("🧩 Parsed values:", { eventName, nftAddress, tokenId, seller, price, address });
     console.log("🔗 Connecting to MongoDB...");
 
     const client = await MongoClient.connect(uri);
