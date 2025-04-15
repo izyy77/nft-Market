@@ -1,0 +1,32 @@
+specVersion: 0.0.5
+description: NFT Marketplace subgraph
+repository: https://github.com/yourname/graph-nft-market
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: NFTMarketPlace
+    network: sepolia
+    source:
+      address: "0xA54A118e2856a6Bd64A03683510c39c67faf7a9C"
+      abi: NFTMarketPlace
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ItemListed
+        - ItemBought
+        - ItemCanceled
+      abis:
+        - name: NFTMarketPlace
+          file: ./abis/NFTMarketPlace.json
+      eventHandlers:
+        - event: ItemListed(indexed address,indexed address,indexed uint256,uint256)
+          handler: handleItemListed
+        - event: ItemBought(indexed address,indexed address,indexed uint256,uint256)
+          handler: handleItemBought
+        - event: ItemCanceled(indexed address,indexed address,indexed uint256)
+          handler: handleItemCanceled
+      file: ./src/mapping.ts
